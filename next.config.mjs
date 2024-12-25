@@ -2,17 +2,16 @@
 const nextConfig = {
   reactStrictMode: true,
   
-  // Webpack customization for `node-fetch`
   webpack: (config) => {
-    config.externals = {
-      ...config.externals,
-      'node-fetch': 'commonjs node-fetch',
-    };
+    // Correct `externals` syntax for `node-fetch`
+    config.externals = config.externals || [];
+    config.externals.push({ 'node-fetch': 'commonjs node-fetch' });
+
     return config;
   },
 
-  // Optionally disable ESLint during builds
   eslint: {
+    // Disable ESLint during builds if necessary
     ignoreDuringBuilds: true,
   },
 };
