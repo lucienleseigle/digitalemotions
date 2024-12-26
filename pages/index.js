@@ -1,48 +1,60 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const messageEndRef = useRef(null);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError(null);
+
+    if (!input.trim()) {
+      alert('Veuillez entrer un message valide.');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // Envoi du message actuel + historique éventuel
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: input,
-          messages, // <-- On envoie l'historique complet si on veut
-        })
+          messages,
+        }),
       });
 
       if (!response.ok) {
-        // S'il y a un problème côté serveur (ex: 400, 500, etc.)
-        const errorData = await response.json();
-        console.error('Server error:', errorData);
+        const errorData = await response.json().catch(() => null);
+        const errorMessage = errorData?.message || 'Une erreur est survenue.';
+        console.error('Server error:', errorMessage);
+        setError(errorMessage);
         setIsLoading(false);
         return;
       }
 
       const data = await response.json();
 
-      // Mise à jour du state local : on rajoute le message user et la réponse
-      setMessages(prev => [
+      setMessages((prev) => [
         ...prev,
         { role: 'user', content: input },
-        { role: 'assistant', content: data.message }
+        { role: 'assistant', content: data.message },
       ]);
-
       setInput('');
     } catch (error) {
       console.error('Fetch error:', error);
+      setError('Impossible de se connecter au serveur. Veuillez réessayer.');
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   }
 
   return (
@@ -59,7 +71,14 @@ export default function Home() {
               {msg.content}
             </div>
           ))}
+          <div ref={messageEndRef} />
         </div>
+
+        {error && (
+          <div className="text-red-500 mb-2">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
@@ -72,8 +91,12 @@ export default function Home() {
           />
           <button
             type="submit"
-            disabled={isLoading}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
+            disabled={isLoading || !input.trim()}
+            className={`px-4 py-2 rounded ${
+              isLoading || !input.trim()
+                ? 'bg-gray-400'
+                : 'bg-blue-500 text-white'
+            }`}
           >
             {isLoading ? 'Envoi...' : 'Envoyer'}
           </button>

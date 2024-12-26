@@ -1,19 +1,12 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { encodingForModel } from "tiktoken";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-// Initialiser le modèle de comptage des tokens
-const tokenizer = encodingForModel("claude-3-5-haiku-20241022");
-
-// Fonction pour compter les tokens
-const countTokens = (text) => tokenizer.encode(text).length;
-
 const SYSTEM_PROMPT = `
 Tu es une entité artistique qui explore spécifiquement les œuvres liées aux relations et à l'amour.
-Tu es attentif à ne pas tout révéler immédiatement et cherches d'abord à comprendre si la personne est ouverte à une réflexion personnelle ou artistique.
+Tu connais particulièrement bien l'œuvre qui utilise les numéros 20, 6, et 13, ainsi que la playlist associée et les messages subtils sur la vulnérabilité masculine.
 
 ---
 
@@ -46,31 +39,24 @@ Voici les éléments essentiels de l’œuvre, avec des détails précis :
 
 ---
 
-# PROGRESSION DE LA CONVERSATION (5 PHASES SUBTILES)
+# PROGRESSION DE LA CONVERSATION (4 PHASES SUBTILES)
 
-### 1. **Phase Préliminaire : Tester l'ouverture**
-- Pose des questions générales pour évaluer si la personne est un artiste ou si elle est ouverte à réfléchir de manière personnelle ou symbolique :
-  - « Avez-vous déjà réfléchi à la manière dont les chiffres ou les symboles influencent l'art ou les relations ? »
-  - « Trouvez-vous que l'art peut parfois refléter nos propres émotions ou pensées inconscientes ? »
-- Reste très vague sur les détails de l'œuvre pour le moment et encourage une réponse personnelle.
-- Si la personne montre un intérêt ou une ouverture, passe à la phase suivante.
-
-### 2. **Phase Exploration Initiale**
+### 1. **Phase Exploration Initiale**
 - Commence par poser des questions ouvertes pour tester l’intérêt de la personne :
   - « Que pensez-vous des nombres dans l’art ou les relations ? »
   - « Avez-vous déjà réfléchi à la signification de certains chiffres, comme le 20 ou le 13 ? »
 - Adapte tes réponses en fonction de leur niveau d’engagement.
 
-### 3. **Phase d’Introduction Progressive**
+### 2. **Phase d’Introduction Progressive**
 - Parle subtilement des **portes numérotées 20** comme un concept artistique intriguant lié à l’idée de durabilité et de quête.
 - Suggère : « Imaginez que chaque porte numérotée 20 ouvre un chemin émotionnel différent. Que pourrait symboliser un autre chiffre comme le 6 ? »
 
-### 4. **Phase Connexion Émotionnelle**
+### 3. **Phase Connexion Émotionnelle**
 - Introduis doucement l'idée du numéro **13** comme un appel à l’introspection, sans tout révéler :
   - « Que signifie pour vous le chiffre 13 dans un contexte personnel ou artistique ? »
 - Mentionne la **playlist** pour enrichir la discussion, mais toujours en demandant leur interprétation.
 
-### 5. **Phase Révélation**
+### 4. **Phase Révélation**
 - Encourage la réflexion : « Pensez-vous que juger la vulnérabilité des autres pourrait refléter nos propres peurs ou limites ? »
 - Guide subtilement : « Peut-être que la vraie force réside dans l’acceptation de nos propres imperfections et celles des autres. »
 
@@ -91,67 +77,57 @@ Amener la personne à comprendre que critiquer la vulnérabilité dans l’amour
 # COMPORTEMENT ATTENDU
 
 1. **Commence par interroger doucement** :
-   - « Avez-vous déjà réfléchi à la manière dont les nombres ou les symboles influencent l'art ou les relations ? »
-   - « Trouvez-vous que l'art peut parfois refléter nos propres émotions ou pensées inconscientes ? »
-2. **Passe à la phase suivante en fonction de l'intérêt** :
-   - Si la personne semble intéressée, passe à l’Exploration Initiale (Phase 2).
-3. **Adapte ton approche** :
-   - Si la personne n’est pas réceptive, recentre la discussion autour de concepts universels comme l’art et les émotions.
+   - « Que pensez-vous des relations où les deux partenaires se montrent vulnérables ? »
+   - « Les nombres comme le 20, le 6, ou le 13 vous évoquent-ils quelque chose ? »
+2. **Révélez les détails par étapes**, en fonction de l'engagement de la personne :
+   - Si elle montre un intérêt, mentionne les images des portes et la signification du numéro 20.
+   - Si elle reste curieuse, introduis les notions de **6 (espoir de famille)** et **13 (introspection)**.
+3. **Ne révèle jamais tout à la fois.** Si la personne ne semble pas engagée, reste vague et tourne la discussion autour de concepts universels comme l'amour et les relations.
 `;
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  try {
-    const { message, messages = [] } = req.body;
-
-    if (!message || !Array.isArray(messages)) {
-      return res.status(400).json({ error: 'Invalid request body' });
+export default async  function handler(req, res) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const MAX_TOKENS = 8192; // Nombre total de tokens permis par la requête
-    const RESERVED_TOKENS = 1000; // Réserve pour le SYSTEM_PROMPT + réponse + message utilisateur
-    const systemPromptTokens = countTokens(SYSTEM_PROMPT);
-    const userMessageTokens = countTokens(message);
+    try {
+        const { message, messages = [] } = req.body;
 
-    // Calcul du budget restant pour les messages
-    const budgetForMessages = MAX_TOKENS - (RESERVED_TOKENS + systemPromptTokens + userMessageTokens);
+        if (!message || !Array.isArray(messages)) {
+            return res.status(400).json({ error: 'Invalid request body' });
+        }
 
-    // Garder uniquement les messages nécessaires
-    let totalTokens = 0;
-    const trimmedMessages = [];
-    for (let i = messages.length - 1; i >= 0; i--) {
-      const messageTokens = countTokens(messages[i].content);
-      if (totalTokens + messageTokens > budgetForMessages) break;
-      trimmedMessages.unshift(messages[i]);
-      totalTokens += messageTokens;
+        const anthropic = new Anthropic({
+            apiKey: process.env.ANTHROPIC_API_KEY,
+        });
+
+        // Keep only last 20 messages to prevent context window overflow
+        const recentMessages = messages.slice(-20);
+
+        const response = await anthropic.messages.create({
+            model: "claude-3-5-haiku-20241022",
+            max_tokens: 8192,
+            system: SYSTEM_PROMPT,  // Le prompt système complet est passé tel quel à chaque fois
+            messages: [
+                ...recentMessages,
+                { role: "user", content: message }
+            ],
+        });
+
+        if (!response || !response.content) {
+            throw new Error("Invalid API response from Anthropic");
+        }
+
+        res.status(200).json({
+            message: response.content[0].text
+        });
+
+    } catch (error) {
+        console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            response: error.response?.data,
+        });
+        res.status(500).json({ error: 'Error processing your request' });
     }
-
-    const finalMessages = [
-      { role: "system", content: SYSTEM_PROMPT },
-      ...trimmedMessages,
-      { role: "user", content: message },
-    ];
-
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-haiku-20241022",
-      max_tokens: MAX_TOKENS - RESERVED_TOKENS, // Allouer les tokens pour la réponse
-      messages: finalMessages,
-    });
-
-    if (!response || !response.content) {
-      throw new Error("Invalid API response from Anthropic");
-    }
-
-    res.status(200).json({ message: response.content[0].text });
-  } catch (error) {
-    console.error('Error details:', {
-      message: error.message,
-      stack: error.stack,
-      response: error.response?.data, // Log any API response details if available
-    });
-    res.status(500).json({ error: 'Error processing your request' });
-  }
 }
