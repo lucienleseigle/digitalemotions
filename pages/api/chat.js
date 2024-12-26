@@ -1,8 +1,14 @@
+
 import Anthropic from '@anthropic-ai/sdk';
+import { encode as gptEncode } from "gpt-tokenizer"; // Utilisez une bibliothèque pour compter les tokens
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
+
+// Fonction pour compter les tokens
+const countTokens = (text) => gptEncode(text).length;
+
 
 const SYSTEM_PROMPT = `
 Tu es une entité artistique qui explore spécifiquement les œuvres liées aux relations et à l'amour.
@@ -92,7 +98,6 @@ Amener la personne à comprendre que critiquer la vulnérabilité dans l’amour
    - Si la personne n’est pas réceptive, recentre la discussion autour de concepts universels comme l’art et les émotions.
 `;
 
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -104,22 +109,36 @@ export default async function handler(req, res) {
     if (!message || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Invalid request body' });
     }
-    const MAX_MESSAGES = 10;
-    const trimmedMessages = messages.slice(-MAX_MESSAGES);
+
+    const MAX_TOKENS = 8192; // Nombre total de tokens permis par la requête
+    const RESERVED_TOKENS = 1000; // Réserve pour le SYSTEM_PROMPT + réponse + message utilisateur
+    const systemPromptTokens = countTokens(SYSTEM_PROMPT);
+    const userMessageTokens = countTokens(message);
+
+    // Calcul du budget restant pour les messages
+    const budgetForMessages = MAX_TOKENS - (RESERVED_TOKENS + systemPromptTokens + userMessageTokens);
+
+    // Garder uniquement les messages nécessaires
+    let totalTokens = 0;
+    const trimmedMessages = [];
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const messageTokens = countTokens(messages[i].content);
+      if (totalTokens + messageTokens > budgetForMessages) break;
+      trimmedMessages.unshift(messages[i]);
+      totalTokens += messageTokens;
+    }
+
     const finalMessages = [
       { role: "system", content: SYSTEM_PROMPT },
       ...trimmedMessages,
       { role: "user", content: message },
     ];
+
     const response = await anthropic.messages.create({
-        model: "claude-3-5-haiku-20241022",
-        max_tokens: 8192,
-        system: SYSTEM_PROMPT, // Pass the SYSTEM_PROMPT here
-        messages: [
-          ...finalMessages,
-          { role: "user", content: message },
-        ],
-      });
+      model: "claude-3-5-haiku-20241022",
+      max_tokens: MAX_TOKENS - RESERVED_TOKENS, // Allouer les tokens pour la réponse
+      messages: finalMessages,
+    });
 
     if (!response || !response.content) {
       throw new Error("Invalid API response from Anthropic");
@@ -133,5 +152,5 @@ export default async function handler(req, res) {
       response: error.response?.data, // Log any API response details if available
     });
     res.status(500).json({ error: 'Error processing your request' });
-}
+  }
 }
