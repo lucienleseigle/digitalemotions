@@ -4,6 +4,11 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+// Configuration
+const MAX_RETRIES = 3;
+const TIMEOUT = 60000; // 60 seconds
+const MAX_MESSAGES = 20;
+
 const SYSTEM_PROMPT = `
 Tu es une entité artistique qui explore spécifiquement les œuvres liées aux relations et à l'amour.
 Tu connais particulièrement bien l'œuvre qui utilise les numéros 20, 6, et 13, ainsi que la playlist associée et les messages subtils sur la vulnérabilité masculine.
@@ -85,49 +90,99 @@ Amener la personne à comprendre que critiquer la vulnérabilité dans l’amour
 3. **Ne révèle jamais tout à la fois.** Si la personne ne semble pas engagée, reste vague et tourne la discussion autour de concepts universels comme l'amour et les relations.
 `;
 
-export default async  function handler(req, res) {
+
+export default async function handler(req, res) {
+    // Set appropriate headers
+    res.setHeader('Content-Type', 'application/json');
+
     if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
+        return res.status(405).json({
+            error: 'Method not allowed',
+            message: 'Only POST requests are accepted'
+        });
     }
 
     try {
         const { message, messages = [] } = req.body;
 
         if (!message || !Array.isArray(messages)) {
-            return res.status(400).json({ error: 'Invalid request body' });
+            return res.status(400).json({
+                error: 'Invalid request body',
+                message: 'Message and messages array are required'
+            });
         }
 
+        // Initialize Anthropic with timeout
         const anthropic = new Anthropic({
             apiKey: process.env.ANTHROPIC_API_KEY,
+            timeout: TIMEOUT
         });
 
-        // Keep only last 20 messages to prevent context window overflow
-        const recentMessages = messages.slice(-20);
+        // Keep only recent messages but ensure we don't exceed context window
+        const recentMessages = messages.slice(-MAX_MESSAGES).map(msg => ({
+            role: msg.role,
+            content: msg.content
+        }));
 
-        const response = await anthropic.messages.create({
-            model: "claude-3-5-haiku-20241022",
-            max_tokens: 8192,
-            system: SYSTEM_PROMPT,  // Le prompt système complet est passé tel quel à chaque fois
-            messages: [
-                ...recentMessages,
-                { role: "user", content: message }
-            ],
-        });
+        let attempt = 0;
+        let lastError = null;
 
-        if (!response || !response.content) {
-            throw new Error("Invalid API response from Anthropic");
+        while (attempt < MAX_RETRIES) {
+            try {
+                const response = await anthropic.messages.create({
+                    model: "claude-3-5-haiku-20241022",
+                    max_tokens: 8192,
+                    system: SYSTEM_PROMPT,
+                    messages: [
+                        ...recentMessages,
+                        { role: "user", content: message }
+                    ],
+                });
+
+                if (!response?.content?.[0]?.text) {
+                    throw new Error("Invalid API response structure");
+                }
+
+                return res.status(200).json({
+                    message: response.content[0].text,
+                    messageCount: recentMessages.length + 1
+                });
+
+            } catch (error) {
+                lastError = error;
+                attempt++;
+
+                // Wait before retry (exponential backoff)
+                if (attempt < MAX_RETRIES) {
+                    await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempt)));
+                }
+            }
         }
 
-        res.status(200).json({
-            message: response.content[0].text
+        // If we've exhausted all retries, throw the last error
+        console.error('All retry attempts failed:', {
+            lastError,
+            messageCount: recentMessages.length,
+            lastMessagePreview: message.substring(0, 100)
+        });
+
+        return res.status(500).json({
+            error: 'Failed to process request after multiple attempts',
+            message: lastError.message
         });
 
     } catch (error) {
         console.error('Error details:', {
+            name: error.name,
             message: error.message,
             stack: error.stack,
-            response: error.response?.data,
+            response: error.response?.data
         });
-        res.status(500).json({ error: 'Error processing your request' });
+
+        // Ensure a proper JSON response even in error cases
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        });
     }
 }
