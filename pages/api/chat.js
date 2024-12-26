@@ -1,14 +1,15 @@
-
 import Anthropic from '@anthropic-ai/sdk';
-import { encode as gptEncode } from "gpt-tokenizer"; // Utilisez une bibliothèque pour compter les tokens
+import { encodingForModel } from "tiktoken";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-// Fonction pour compter les tokens
-const countTokens = (text) => gptEncode(text).length;
+// Initialiser le modèle de comptage des tokens
+const tokenizer = encodingForModel("claude-3-5-haiku-20241022");
 
+// Fonction pour compter les tokens
+const countTokens = (text) => tokenizer.encode(text).length;
 
 const SYSTEM_PROMPT = `
 Tu es une entité artistique qui explore spécifiquement les œuvres liées aux relations et à l'amour.
