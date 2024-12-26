@@ -104,13 +104,19 @@ export default async function handler(req, res) {
     if (!message || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Invalid request body' });
     }
-
+    const MAX_MESSAGES = 10;
+    const trimmedMessages = messages.slice(-MAX_MESSAGES);
+    const finalMessages = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...trimmedMessages,
+      { role: "user", content: message },
+    ];
     const response = await anthropic.messages.create({
         model: "claude-3-5-haiku-20241022",
         max_tokens: 8192,
         system: SYSTEM_PROMPT, // Pass the SYSTEM_PROMPT here
         messages: [
-          ...messages,
+          ...finalMessages,
           { role: "user", content: message },
         ],
       });
