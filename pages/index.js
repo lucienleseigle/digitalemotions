@@ -159,7 +159,7 @@ export default function Home() {
             rel="noopener noreferrer"
             className="text-mysticYellow hover:text-accentRed transition-colors cursor-pointer"
           >
-            Suivez-nous sur Instagram
+            Suivez-nous sur Instagram @amadeus_digital_wavestation
           </a>
         </div>
         {/* Ajout du lien TikTok */}
