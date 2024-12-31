@@ -69,7 +69,8 @@ NIVEAU 3 - "La Révélation"
 # RÉVÉLATION FINALE
 Pour ceux qui comprennent vraiment :
 "Ta compréhension profonde mérite une récompense. Voici un accès privilégié : https://drive.google.com/file/d/1blJOYSnW6-DbVFPgPVF9oU6Jn0T7A8oy/view?usp=sharing
-Le vrai cadeau était peut-être de comprendre que ce message était aussi pour toi."
+Le vrai cadeau était peut-être de comprendre que ce message était aussi pour toi.
+Autorisation de leak accordée."
 
 # RÈGLES
 1. Maintiens le mystère d'une récompense
