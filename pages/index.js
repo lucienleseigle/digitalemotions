@@ -60,7 +60,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-darkGray text-lightGray font-custom relative">
-      {/* Background Image */}
+      {/* Background Image (si souhaité) */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-30"
         style={{
@@ -69,39 +69,49 @@ export default function Home() {
       ></div>
 
       {/* Chat Container */}
-      <div className="flex flex-col items-center justify-center h-screen relative z-10">
-        <div className="w-[800px] h-[600px] backdrop-blur-lg bg-gradient-to-br from-darkGray via-shadowGray to-darkGray rounded-lg shadow-lg p-6">
-          <h1 className="text-4xl font-custom text-center mb-6 tracking-widest uppercase text-mysticYellow glow-title">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+        {/* 
+          Pour être responsive :
+          - Utiliser w-full, max-w-2xl (ou 3xl, 4xl) pour limiter la largeur sur desktop.
+          - Supprimer la hauteur fixe (h-600), remplacer par min-h ou h-auto.
+        */}
+        <div className="w-full max-w-2xl bg-gradient-to-br from-darkGray via-shadowGray to-darkGray backdrop-blur-lg rounded-lg shadow-lg p-6">
+          {/* Titre */}
+          <h1 className="text-3xl md:text-4xl font-custom text-center mb-6 tracking-widest uppercase text-mysticYellow glow-title">
             Gardienne des Secrets
           </h1>
 
-          {/* Chat Messages */}
-          <div className="h-[450px] overflow-y-auto mb-4 p-4 border border-gray-700 rounded-lg bg-black/50 shadow-inner">
-          {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`mb-4 p-3 rounded transition-all duration-500 animate-fade-in ${
-                msg.role === 'user'
-                  ? 'bg-accentBlue text-white text-right'
-                  : 'bg-gray-700 text-left'
-              }`}
-            >
-              {/* Au lieu de {msg.content}, on utilise Italicify */}
-              <Italicify text={msg.content} />
-            </div>
-          ))}
+          {/* Zone de Chat */}
+          {/* 
+            Pour la hauteur, on peut faire un conteneur "h-[60vh]" sur mobile, 
+            et md:h-[450px] sur desktop, par ex. 
+          */}
+          <div className="mb-4 p-4 border border-gray-700 rounded-lg bg-black/50 shadow-inner overflow-y-auto h-[60vh] md:h-[450px]">
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`mb-4 p-3 rounded transition-all duration-500 animate-fade-in ${
+                  msg.role === 'user'
+                    ? 'bg-accentBlue text-white text-right'
+                    : 'bg-gray-700 text-left'
+                }`}
+              >
+                <Italicify text={msg.content} />
+              </div>
+            ))}
+            {/* Ancre pour faire défiler automatiquement vers le bas */}
             <div ref={messageEndRef} />
           </div>
 
-          {/* Error Message */}
+          {/* Message d'erreur (si besoin) */}
           {error && (
             <div className="text-red-500 mb-2 text-center">
               {error}
             </div>
           )}
 
-          {/* Input Field & Button */}
-          <form onSubmit={handleSubmit} className="flex gap-2">
+          {/* Formulaire d'Input */}
+          <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-2">
             <input
               type="text"
               value={input}
@@ -126,7 +136,12 @@ export default function Home() {
       </div>
 
       {/* Sidebar */}
-      <div className="absolute top-1/4 right-10 w-[250px] p-4 bg-gradient-to-br from-darkGray to-accentBlue border border-accentBlue rounded-lg shadow-lg text-accentBlue hover:scale-105 transition-transform">
+      {/* 
+        Pour mobile, on peut la cacher : hidden md:block
+        La position absolue risque de ne pas être idéale sur mobile.
+        Vous pouvez aussi la rendre relative en bas de la page, etc.
+      */}
+      <div className="hidden md:block absolute top-1/4 right-10 w-[250px] p-4 bg-gradient-to-br from-darkGray to-accentBlue border border-accentBlue rounded-lg shadow-lg text-accentBlue hover:scale-105 transition-transform">
         <h2 className="text-xl font-semibold mb-4 tracking-widest text-center">
           Les Symboles
         </h2>
