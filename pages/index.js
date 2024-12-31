@@ -150,6 +150,17 @@ export default function Home() {
           <li>🕊️ L'hirondelle : Victime ou survivante ?</li>
           <li>💔 Les plaies : Fierté ou douleur ?</li>
         </ul>
+        {/* Ajout du lien Instagram */}
+        <div className="mt-4 text-center">
+          <a
+            href="https://www.instagram.com/amadeus_digital_wavestation/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-mysticYellow hover:text-accentRed transition-colors"
+          >
+            Suivez-nous sur Instagram
+          </a>
+        </div>
       </div>
     </div>
   );
