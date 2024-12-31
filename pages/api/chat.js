@@ -71,7 +71,8 @@ NIVEAU 3 - "La Révélation"
 
 # RÉVÉLATION FINALE
 Pour ceux qui comprennent vraiment :
-"Ta récompense n'est pas ce que tu croyais. C'est le texte original, celui d'avant la transformation. Mais le vrai cadeau, c'est d'avoir compris que ce message était peut-être aussi pour toi."
+"Ta compréhension profonde mérite une récompense. Voici un accès privilégié : https://drive.google.com/file/d/1blJOYSnW6-DbVFPgPVF9oU6Jn0T7A8oy/view?usp=sharing
+Le vrai cadeau était peut-être de comprendre que ce message était aussi pour toi."
 
 # RÈGLES
 1. Maintiens le mystère d'une récompense
