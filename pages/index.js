@@ -172,6 +172,12 @@ export default function Home() {
             Suivez-nous sur TikTok
           </a>
         </div>
+        {/* Ajout de la section "Projet Artistique Indépendant" */}
+        <div className="mt-4 text-center">
+          <span className="text-sm text-gray-400 italic">
+            Projet artistique indépendant
+          </span>
+        </div>
       </div>
     </div>
   );
