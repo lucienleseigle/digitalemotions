@@ -60,9 +60,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-darkGray text-lightGray font-custom relative">
-      {/* Background Image (si souhaité) */}
+      {/* Background Image (avec pointer-events-none pour éviter de bloquer les interactions) */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-30"
+        className="absolute inset-0 bg-cover bg-center opacity-30 pointer-events-none"
         style={{
           backgroundImage: `url('/background-image.jpg')`,
         }}
@@ -141,7 +141,7 @@ export default function Home() {
         La position absolue risque de ne pas être idéale sur mobile.
         Vous pouvez aussi la rendre relative en bas de la page, etc.
       */}
-      <div className="hidden md:block absolute top-1/4 right-10 w-[250px] p-4 bg-gradient-to-br from-darkGray to-accentBlue border border-accentBlue rounded-lg shadow-lg text-accentBlue hover:scale-105 transition-transform">
+      <div className="hidden md:block absolute top-1/4 right-10 w-[250px] p-4 bg-gradient-to-br from-darkGray to-accentBlue border border-accentBlue rounded-lg shadow-lg text-accentBlue hover:scale-105 transition-transform z-20">
         <h2 className="text-xl font-semibold mb-4 tracking-widest text-center">
           Les Symboles
         </h2>
