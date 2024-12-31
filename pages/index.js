@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Italicify from '../components/Italicify';
+import { FaPaintBrush } from 'react-icons/fa'; // Import de l'icône (assurez-vous d'avoir installé react-icons)
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
@@ -156,7 +157,7 @@ export default function Home() {
             href="https://www.instagram.com/amadeus_digital_wavestation/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-mysticYellow hover:text-accentRed transition-colors"
+            className="text-mysticYellow hover:text-accentRed transition-colors cursor-pointer"
           >
             Suivez-nous sur Instagram
           </a>
@@ -167,13 +168,14 @@ export default function Home() {
             href="https://www.tiktok.com/@amadeusdigitalcreations?lang=fr"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-mysticYellow hover:text-accentRed transition-colors"
+            className="text-mysticYellow hover:text-accentRed transition-colors cursor-pointer"
           >
             Suivez-nous sur TikTok
           </a>
         </div>
-        {/* Ajout de la section "Projet Artistique Indépendant" */}
-        <div className="mt-4 text-center">
+        {/* Ajout de la section "Projet Artistique Indépendant" avec icône */}
+        <div className="mt-4 text-center flex items-center justify-center gap-2">
+          <FaPaintBrush className="text-gray-400" />
           <span className="text-sm text-gray-400 italic">
             Projet artistique indépendant
           </span>
