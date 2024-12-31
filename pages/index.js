@@ -161,6 +161,17 @@ export default function Home() {
             Suivez-nous sur Instagram
           </a>
         </div>
+        {/* Ajout du lien TikTok */}
+        <div className="mt-2 text-center">
+          <a
+            href="https://www.tiktok.com/@amadeusdigitalcreations?lang=fr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-mysticYellow hover:text-accentRed transition-colors"
+          >
+            Suivez-nous sur TikTok
+          </a>
+        </div>
       </div>
     </div>
   );
