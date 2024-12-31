@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import styles from '../styles/Home.module.css';
+import Italicify from '../components/Italicify';
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
@@ -59,10 +59,10 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-200 font-[Poppins] relative">
+    <div className="min-h-screen bg-darkGray text-lightGray font-custom relative">
       {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-20"
+        className="absolute inset-0 bg-cover bg-center opacity-30"
         style={{
           backgroundImage: `url('/background-image.jpg')`,
         }}
@@ -70,25 +70,26 @@ export default function Home() {
 
       {/* Chat Container */}
       <div className="flex flex-col items-center justify-center h-screen relative z-10">
-        <div className="w-[800px] h-[600px] backdrop-blur-lg bg-gray-800/90 rounded-lg shadow-lg p-6">
-          <h1 className="text-3xl font-bold text-center mb-6 tracking-widest uppercase text-yellow-300">
+        <div className="w-[800px] h-[600px] backdrop-blur-lg bg-gradient-to-br from-darkGray via-shadowGray to-darkGray rounded-lg shadow-lg p-6">
+          <h1 className="text-4xl font-custom text-center mb-6 tracking-widest uppercase text-mysticYellow glow-title">
             Gardienne des Secrets
           </h1>
 
           {/* Chat Messages */}
           <div className="h-[450px] overflow-y-auto mb-4 p-4 border border-gray-700 rounded-lg bg-black/50 shadow-inner">
-            {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`mb-4 p-3 rounded ${
-                  msg.role === 'user'
-                    ? 'bg-blue-700 text-white text-right'
-                    : 'bg-gray-700 text-left'
-                }`}
-              >
-                {msg.content}
-              </div>
-            ))}
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`mb-4 p-3 rounded transition-all duration-500 animate-fade-in ${
+                msg.role === 'user'
+                  ? 'bg-accentBlue text-white text-right'
+                  : 'bg-gray-700 text-left'
+              }`}
+            >
+              {/* Au lieu de {msg.content}, on utilise Italicify */}
+              <Italicify text={msg.content} />
+            </div>
+          ))}
             <div ref={messageEndRef} />
           </div>
 
@@ -99,23 +100,23 @@ export default function Home() {
             </div>
           )}
 
-          {/* Input Field */}
+          {/* Input Field & Button */}
           <form onSubmit={handleSubmit} className="flex gap-2">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="flex-1 p-3 border rounded bg-gray-800 border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="flex-1 p-3 border rounded bg-darkGray border-lightGray focus:outline-none focus:ring-2 focus:ring-mysticYellow"
               placeholder="Entrez vos pensées..."
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className={`px-6 py-3 rounded ${
+              className={`px-6 py-3 rounded transform transition-all duration-300 ${
                 isLoading || !input.trim()
-                  ? 'bg-gray-600'
-                  : 'bg-yellow-500 hover:bg-yellow-400 text-black'
+                  ? 'bg-gray-600 cursor-not-allowed'
+                  : 'bg-mysticYellow hover:bg-accentRed text-black hover:scale-105'
               }`}
             >
               {isLoading ? 'Envoi...' : 'Envoyer'}
@@ -124,8 +125,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Decorative Sidebar */}
-      <div className="absolute top-1/4 right-10 w-[250px] p-4 bg-gray-800/80 border border-yellow-500 rounded-lg shadow-lg text-yellow-300">
+      {/* Sidebar */}
+      <div className="absolute top-1/4 right-10 w-[250px] p-4 bg-gradient-to-br from-darkGray to-accentBlue border border-accentBlue rounded-lg shadow-lg text-accentBlue hover:scale-105 transition-transform">
         <h2 className="text-xl font-semibold mb-4 tracking-widest text-center">
           Les Symboles
         </h2>
@@ -134,9 +135,6 @@ export default function Home() {
           <li>🕊️ L'hirondelle : Victime ou survivante ?</li>
           <li>💔 Les plaies : Fierté ou douleur ?</li>
         </ul>
-        <p className="mt-4 text-xs text-gray-400 text-center">
-          Explorez ces idées pour percer le mystère.
-        </p>
       </div>
     </div>
   );

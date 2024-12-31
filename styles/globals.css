@@ -9,3 +9,24 @@ body {
   background-color: #000; /* Exemple : noir pour un thème sombre */
   color: #fff; /* Couleur de texte blanc */
 }
+
+/* Effet "glow" pour le titre */
+.glow-title {
+  text-shadow: 0 0 5px #ffba08, 0 0 10px #ffba08, 0 0 20px #ffba08;
+}
+
+/* (Déjà gérées dans la config Tailwind)
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+*/

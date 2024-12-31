@@ -2,3 +2,7 @@
   font-size: 2rem;
   color: #FFD700;
 }
+
+.glow-title {
+  text-shadow: 0 0 5px #ffba08, 0 0 10px #ffba08, 0 0 20px #ffba08;
+}
