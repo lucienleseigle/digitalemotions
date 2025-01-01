@@ -71,22 +71,23 @@ export default function Home() {
 
       {/* Chat Container */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-        {/* 
-          Pour être responsive :
-          - Utiliser w-full, max-w-2xl (ou 3xl, 4xl) pour limiter la largeur sur desktop.
-          - Supprimer la hauteur fixe (h-600), remplacer par min-h ou h-auto.
-        */}
+        {/* Container principal */}
         <div className="w-full max-w-2xl bg-gradient-to-br from-darkGray via-shadowGray to-darkGray backdrop-blur-lg rounded-lg shadow-lg p-6">
           {/* Titre */}
-          <h1 className="text-3xl md:text-4xl font-custom text-center mb-6 tracking-widest uppercase text-mysticYellow glow-title">
+          <h1 className="text-3xl md:text-4xl font-custom text-center mb-2 tracking-widest uppercase text-mysticYellow glow-title">
             Gardienne des Secrets
           </h1>
 
+          {/* AJOUT : Paragraphe introductif incitant à l'interaction */}
+          <p className="text-center text-sm md:text-base mb-6 text-gray-300">
+            Entrez dans l'univers de <em>L'Enfant Soldat</em> et dialoguez avec
+            la Gardienne des Secrets. Découvrez la symbolique des chaînes, des
+            plaies et de l'hirondelle enchaînée. Posez vos questions, osez
+            explorer le sens caché : la Gardienne répondra si vous prouvez
+            votre curiosité et votre détermination.
+          </p>
+
           {/* Zone de Chat */}
-          {/* 
-            Pour la hauteur, on peut faire un conteneur "h-[60vh]" sur mobile, 
-            et md:h-[450px] sur desktop, par ex. 
-          */}
           <div className="mb-4 p-4 border border-gray-700 rounded-lg bg-black/50 shadow-inner overflow-y-auto h-[60vh] md:h-[450px]">
             {messages.map((msg, i) => (
               <div
@@ -118,7 +119,7 @@ export default function Home() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="flex-1 p-3 border rounded bg-darkGray border-lightGray focus:outline-none focus:ring-2 focus:ring-mysticYellow"
-              placeholder="Entrez vos pensées..."
+              placeholder="Posez votre question..."
               disabled={isLoading}
             />
             <button
@@ -137,11 +138,6 @@ export default function Home() {
       </div>
 
       {/* Sidebar */}
-      {/* 
-        Pour mobile, on peut la cacher : hidden md:block
-        La position absolue risque de ne pas être idéale sur mobile.
-        Vous pouvez aussi la rendre relative en bas de la page, etc.
-      */}
       <div className="hidden md:block absolute top-1/4 right-10 w-[250px] p-4 bg-gradient-to-br from-darkGray to-accentBlue border border-accentBlue rounded-lg shadow-lg text-accentBlue hover:scale-105 transition-transform z-20">
         <h2 className="text-xl font-semibold mb-4 tracking-widest text-center">
           Les Symboles
@@ -151,7 +147,7 @@ export default function Home() {
           <li>🕊️ L'hirondelle : Victime ou survivante ?</li>
           <li>💔 Les plaies : Fierté ou douleur ?</li>
         </ul>
-        {/* Ajout du lien Instagram */}
+        {/* Lien Instagram */}
         <div className="mt-4 text-center">
           <a
             href="https://www.instagram.com/amadeus_digital_wavestation/"
@@ -162,7 +158,7 @@ export default function Home() {
             Suivez-nous sur Instagram @amadeus_digital_wavestation
           </a>
         </div>
-        {/* Ajout du lien TikTok */}
+        {/* Lien TikTok */}
         <div className="mt-2 text-center">
           <a
             href="https://www.tiktok.com/@amadeusdigitalcreations?lang=fr"
@@ -173,7 +169,7 @@ export default function Home() {
             Suivez-nous sur TikTok
           </a>
         </div>
-        {/* Ajout de la section "Projet Artistique Indépendant" avec icône */}
+        {/* Projet artistique indépendant */}
         <div className="mt-4 text-center flex items-center justify-center gap-2">
           <FaPaintBrush className="text-gray-400" />
           <span className="text-sm text-gray-400 italic">
