@@ -95,18 +95,18 @@ export default function Home() {
 
           {/* Zone de Chat */}
           <div className="mb-4 p-4 border border-gray-700 rounded-lg bg-black/50 shadow-inner overflow-y-auto h-[60vh] md:h-[450px]">
-            {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`mb-4 p-3 rounded transition-all duration-500 animate-fade-in ${
-                  msg.role === 'user'
-                    ? 'bg-accentBlue text-white text-right'
-                    : 'bg-gray-700 text-left'
-                }`}
-              >
-                <Italicify text={msg.content} />
-              </div>
-            ))}
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`mb-4 p-3 rounded transition-all duration-500 animate-fade-in ${
+                msg.role === 'user'
+                  ? 'bg-accentBlue text-white text-right'
+                  : 'bg-gray-700 text-left'
+              }`}
+            >
+              <Italicify text={msg.content} />
+            </div>
+          ))}
             {/* Ancre pour faire défiler automatiquement vers le bas */}
             <div ref={messageEndRef} />
           </div>
