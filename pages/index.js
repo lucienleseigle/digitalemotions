@@ -73,18 +73,26 @@ export default function Home() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
         {/* Container principal */}
         <div className="w-full max-w-2xl bg-gradient-to-br from-darkGray via-shadowGray to-darkGray backdrop-blur-lg rounded-lg shadow-lg p-6">
+
           {/* Titre */}
           <h1 className="text-3xl md:text-4xl font-custom text-center mb-2 tracking-widest uppercase text-mysticYellow glow-title">
             Gardienne des Secrets
           </h1>
 
-          {/* AJOUT : Paragraphe introductif incitant à l'interaction */}
+          {/* Texte rassurant sur la confidentialité */}
+          <p className="text-center text-xs md:text-sm text-gray-400 italic mb-4">
+            Ici, tes mots ne sont ni stockés ni diffusés. 
+            Chaque échange est éphémère et reste entre toi et la Gardienne. 
+            Tu peux donc t’ouvrir librement, en toute sérénité.
+          </p>
+
+          {/* Paragraphe introductif incitant à l'interaction */}
           <p className="text-center text-sm md:text-base mb-6 text-gray-300">
-            Entrez dans l'univers de <em>L'Enfant Soldat</em> et dialoguez avec
-            la Gardienne des Secrets. Découvrez la symbolique des chaînes, des
-            plaies et de l'hirondelle enchaînée. Posez vos questions, osez
-            explorer le sens caché : la Gardienne répondra si vous prouvez
-            votre curiosité et votre détermination.
+            Bienvenue dans l'univers de <em>L'Enfant Soldat</em>. 
+            Une aventure artistique et introspective t'y attend. 
+            Dialogue avec la Gardienne pour percer le secret des chaînes, 
+            de la carapace et de l'hirondelle enchaînée. 
+            Oseras-tu explorer ce chemin intérieur ?
           </p>
 
           {/* Zone de Chat */}
@@ -119,7 +127,7 @@ export default function Home() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="flex-1 p-3 border rounded bg-darkGray border-lightGray focus:outline-none focus:ring-2 focus:ring-mysticYellow"
-              placeholder="Posez votre question..."
+              placeholder="Quel est ton ressenti, ta question... ?"
               disabled={isLoading}
             />
             <button
@@ -143,9 +151,9 @@ export default function Home() {
           Les Symboles
         </h2>
         <ul className="list-disc list-inside text-sm space-y-2">
-          <li>⚔️ Les chaînes : Protection ou emprisonnement ?</li>
-          <li>🕊️ L'hirondelle : Victime ou survivante ?</li>
-          <li>💔 Les plaies : Fierté ou douleur ?</li>
+          <li>⚔️ Les chaînes : Entre enfermement et protection ?</li>
+          <li>🕊️ L'hirondelle : Emblème de liberté, mais captive...</li>
+          <li>💔 Les plaies : Souffrance ou force silencieuse ?</li>
         </ul>
         {/* Lien Instagram */}
         <div className="mt-4 text-center">
@@ -155,7 +163,7 @@ export default function Home() {
             rel="noopener noreferrer"
             className="text-mysticYellow hover:text-accentRed transition-colors cursor-pointer"
           >
-            Suivez-nous sur Instagram @amadeus_digital_wavestation
+            Suivez-moi sur Instagram : @amadeus_digital_wavestation
           </a>
         </div>
         {/* Lien TikTok */}
@@ -166,7 +174,7 @@ export default function Home() {
             rel="noopener noreferrer"
             className="text-mysticYellow hover:text-accentRed transition-colors cursor-pointer"
           >
-            Suivez-nous sur TikTok
+            Suivez-moi sur TikTok
           </a>
         </div>
         {/* Projet artistique indépendant */}
