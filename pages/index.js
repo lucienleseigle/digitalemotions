@@ -89,10 +89,8 @@ export default function Home() {
           {/* Paragraphe introductif incitant à l'interaction */}
           <p className="text-center text-sm md:text-base mb-6 text-gray-300">
             Bienvenue dans l'univers de <em>L'Enfant Soldat</em>. 
-            Une aventure artistique et introspective t'y attend. 
-            Dialogue avec la Gardienne pour percer le secret des chaînes, 
-            de la carapace et de l'hirondelle enchaînée. 
-            Oseras-tu explorer ce chemin intérieur ?
+            Une aventure artistique et digitale t'y attend. 
+            Dialogue avec la Gardienne pour libérer l'hirondelle enchaînée. 
           </p>
 
           {/* Zone de Chat */}
