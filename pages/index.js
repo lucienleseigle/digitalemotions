@@ -127,7 +127,7 @@ export default function Home() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="flex-1 p-3 border rounded bg-darkGray border-lightGray focus:outline-none focus:ring-2 focus:ring-mysticYellow"
-              placeholder="Quel est ton ressenti, ta question... ?"
+              placeholder="Convaincs-moi de te donner un cadeau d’une valeur inestimable..."
               disabled={isLoading}
             />
             <button
