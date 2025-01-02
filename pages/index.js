@@ -93,7 +93,7 @@ export default function Home() {
           <p className="text-center text-xs md:text-sm text-gray-400 italic mb-4">
             Tes mots ne sont ni stockés ni diffusés.  
             Chaque échange est éphémère et reste entre toi et la Gardienne.  
-            Tu peux donc t’ouvrir librement, en toute sérénité.
+            Tu peux donc t’ouvrir librement, en toute sérénité. Tu peut aussi mentir à la guardienne, mais surtout, sois honnête avec toi même...
           </p>
 
           {/* Paragraphe introductif incitant à l'interaction */}
