@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Italicify from '../components/Italicify';
-import { FaPaintBrush } from 'react-icons/fa'; // Import de l'icône (assurez-vous d'avoir installé react-icons)
+import { FaPaintBrush } from 'react-icons/fa'; // Assurez-vous d'avoir installé react-icons
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
@@ -9,9 +9,19 @@ export default function Home() {
   const [error, setError] = useState(null);
   const messageEndRef = useRef(null);
 
+  // Faire défiler automatiquement vers le bas lorsque les messages changent
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Envoyer un message initial de la Gardienne lorsque le composant est monté
+  useEffect(() => {
+    const initialMessage = {
+      role: 'assistant',
+      content: `✨ Bienvenue, chercheur(se) de vérités. Je suis la Gardienne des Secrets, ici pour te guider dans un voyage de découverte de soi et de révélation. Es-tu prêt(e) à dévoiler les aspects cachés de ton âme ? 🌟`,
+    };
+    setMessages([initialMessage]);
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -37,7 +47,7 @@ export default function Home() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
         const errorMessage = errorData?.message || 'Une erreur est survenue.';
-        console.error('Server error:', errorMessage);
+        console.error('Erreur serveur :', errorMessage);
         setError(errorMessage);
         setIsLoading(false);
         return;
@@ -52,7 +62,7 @@ export default function Home() {
       ]);
       setInput('');
     } catch (error) {
-      console.error('Fetch error:', error);
+      console.error('Erreur de connexion :', error);
       setError('Impossible de se connecter au serveur. Veuillez réessayer.');
     } finally {
       setIsLoading(false);
@@ -61,7 +71,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-darkGray text-lightGray font-custom relative">
-      {/* Background Image (avec pointer-events-none pour éviter de bloquer les interactions) */}
+      {/* Image de fond (avec pointer-events-none pour éviter de bloquer les interactions) */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-30 pointer-events-none"
         style={{
@@ -69,9 +79,9 @@ export default function Home() {
         }}
       ></div>
 
-      {/* Chat Container */}
+      {/* Conteneur de Chat */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-        {/* Container principal */}
+        {/* Conteneur principal */}
         <div className="w-full max-w-2xl bg-gradient-to-br from-darkGray via-shadowGray to-darkGray backdrop-blur-lg rounded-lg shadow-lg p-6">
 
           {/* Titre */}
@@ -81,32 +91,32 @@ export default function Home() {
 
           {/* Texte rassurant sur la confidentialité */}
           <p className="text-center text-xs md:text-sm text-gray-400 italic mb-4">
-            Ici, tes mots ne sont ni stockés ni diffusés. 
-            Chaque échange est éphémère et reste entre toi et la Gardienne. 
+            Tes mots ne sont ni stockés ni diffusés.  
+            Chaque échange est éphémère et reste entre toi et la Gardienne.  
             Tu peux donc t’ouvrir librement, en toute sérénité.
           </p>
 
           {/* Paragraphe introductif incitant à l'interaction */}
           <p className="text-center text-sm md:text-base mb-6 text-gray-300">
-            Bienvenue dans l'univers de <em>L'Enfant Soldat</em>. 
-            Une aventure artistique et digitale t'y attend. 
-            Dialogue avec la Gardienne pour libérer l'hirondelle enchaînée. 
+            Bienvenue dans l'univers de <em>L'Enfant Soldat</em>.  
+            Une aventure artistique et digitale t'y attend.  
+            Dialogue avec la Gardienne pour libérer l'hirondelle enchaînée.
           </p>
 
           {/* Zone de Chat */}
           <div className="mb-4 p-4 border border-gray-700 rounded-lg bg-black/50 shadow-inner overflow-y-auto h-[60vh] md:h-[450px]">
-          {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`mb-4 p-3 rounded transition-all duration-500 animate-fade-in ${
-                msg.role === 'user'
-                  ? 'bg-accentBlue text-white text-right'
-                  : 'bg-gray-700 text-left'
-              }`}
-            >
-              <Italicify text={msg.content} />
-            </div>
-          ))}
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`mb-4 p-3 rounded transition-all duration-500 animate-fade-in ${
+                  msg.role === 'user'
+                    ? 'bg-accentBlue text-white text-right'
+                    : 'bg-gray-700 text-left'
+                }`}
+              >
+                <Italicify text={msg.content} />
+              </div>
+            ))}
             {/* Ancre pour faire défiler automatiquement vers le bas */}
             <div ref={messageEndRef} />
           </div>
